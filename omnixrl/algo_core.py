@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 import jax.numpy as jnp
 from jax.random import PRNGKey
 
-class BaseModel(ABC):
+class BaseNN(ABC):
     """
     Abstract base class for user-defined models in the RL library.
     """
@@ -128,6 +128,9 @@ class PolicyGradient(BaseAlgorithm):
             return -jnp.mean(rewards)  # Placeholder loss
             
         return self.train_step(states, actions, rewards, loss_fn)
+    
+
+
 ############################# User Defined Models Examples in Different neural network libraries ##########################
 # In FLAX:
 from flax import linen as nn

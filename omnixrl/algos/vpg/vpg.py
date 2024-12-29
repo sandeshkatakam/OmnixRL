@@ -1,5 +1,16 @@
+from typing import Any
 import numpy as np
 
+class policy:
+    def __init__(self, num_actions):
+        self.num_actions = num_actions
+        self.returns = []
+        self.states = []
+        self.actions = []
+
+    def get_action(self, state):
+        # Implement policy to select an action based on the given state
+        pass
 class VPG:
     def __init__(self, env, policy, value_function, learning_rate, gamma):
         self.env = env

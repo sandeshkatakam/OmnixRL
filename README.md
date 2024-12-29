@@ -1,3 +1,5 @@
+<div align="center">
+
 # OmnixRL
 ## **NOTE: [Development in Progress]**  
 Inspired by OpenAI Spinning Up RL Algorithms Educational Resource implemented in JAX
@@ -10,10 +12,11 @@ Inspired by OpenAI Spinning Up RL Algorithms Educational Resource implemented in
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-<p align="center">
-  <img src="./assets/imgs/OmnixRL_logo.png">
+<p align="center" style="text-align: center; width: 100%;">
+  <img src="./assets/imgs/OmnixRL_logo.png" alt="OmnixRL Logo" style="max-width: 600px; width: 100%; height: auto; display: block; margin: 0 auto;">
 </p>
 
+</div>
 A comprehensive reinforcement learning library implemented in JAX, inspired by OpenAI's Spinning Up. This library provides a clean, modular implementation of popular RL algorithms with a focus on research experimentation and serves as a research framework for developing novel RL algorithms.
 
 ## Core Features
