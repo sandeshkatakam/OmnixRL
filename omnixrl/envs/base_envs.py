@@ -2,10 +2,8 @@ import jax
 import jax.numpy as jnp
 
 #TODO: Add Support for All Gymnasium Environments
-
 from abc import ABC, abstractmethod
 from typing import Optional, Tuple, Dict, Any, Union, NamedTuple
-import numpy as np
 
 class EnvStep(NamedTuple):
     """Standardized environment step output."""
@@ -78,6 +76,119 @@ from gymnasium.wrappers import (
     NormalizeObservation,
     NormalizeReward,
 )
+
+from abc import ABC, abstractmethod
+from typing import Any, Tuple, Optional
+import gym
+import numpy as np
+
+class BaseEnvLoader(ABC):
+    """Abstract base class for environment loaders"""
+    
+    @abstractmethod
+    def create_env(self) -> gym.Env:
+        """Create and return an environment instance"""
+        pass
+    
+    @abstractmethod
+    def preprocess_obs(self, obs: Any) -> np.ndarray:
+        """Preprocess observation from environment"""
+        pass
+    
+    @abstractmethod
+    def preprocess_reward(self, reward: float) -> float:
+        """Preprocess reward from environment"""
+        pass
+    
+    @property
+    @abstractmethod
+    def observation_space(self) -> gym.Space:
+        """Get observation space of the environment"""
+        pass
+    
+    @property
+    @abstractmethod
+    def action_space(self) -> gym.Space:
+        """Get action space of the environment"""
+        pass
+
+from ..configs.base_config import EnvConfig
+
+class EnvLoader(BaseEnvLoader):
+    """Standard Gym environment loader"""
+    
+    def __init__(self, config: EnvConfig):
+        self.config = config
+        self._env = None
+        self.initialize_env()
+    
+    def initialize_env(self):
+        """Initialize the environment"""
+        self._env = gym.make(self.config.env_id)
+        
+        # Set max episode steps if specified
+        if self.config.max_episode_steps:
+            self._env = gym.wrappers.TimeLimit(
+                self._env, 
+                max_episode_steps=self.config.max_episode_steps
+            )
+        
+        # Add any additional wrappers based on config
+        self._env = self.add_wrappers(self._env)
+    
+    def add_wrappers(self, env: gym.Env) -> gym.Env:
+        """Add any additional wrappers to the environment"""
+        # Reward scaling
+        if self.config.reward_scale != 1.0:
+            env = gym.wrappers.TransformReward(
+                env, 
+                lambda r: r * self.config.reward_scale
+            )
+        
+        # Add other wrappers based on environment type
+        if self.config.state_space_type == "pixels":
+            env = gym.wrappers.ResizeObservation(env, (84, 84))
+            env = gym.wrappers.GrayScaleObservation(env)
+            env = gym.wrappers.FrameStack(env, 4)
+        
+        return env
+    
+    def create_env(self) -> gym.Env:
+        """Create a new environment instance"""
+        if self._env is None:
+            self.initialize_env()
+        return self._env
+    
+    def preprocess_obs(self, obs: Any) -> np.ndarray:
+        """Preprocess observation from environment"""
+        if self.config.state_space_type == "pixels":
+            # Normalize pixel values
+            return np.array(obs).astype(np.float32) / 255.0
+        return np.array(obs).astype(np.float32)
+    
+    def preprocess_reward(self, reward: float) -> float:
+        """Preprocess reward from environment"""
+        return float(reward)
+    
+    @property
+    def observation_space(self) -> gym.Space:
+        """Get observation space of the environment"""
+        if self._env is None:
+            self.initialize_env()
+        return self._env.observation_space
+    
+    @property
+    def action_space(self) -> gym.Space:
+        """Get action space of the environment"""
+        if self._env is None:
+            self.initialize_env()
+        return self._env.action_space
+    
+    def close(self):
+        """Close the environment"""
+        if self._env is not None:
+            self._env.close()
+            self._env = None
 
 class EnvLoader:
     """Handles environment loading and preprocessing for RL algorithms."""
