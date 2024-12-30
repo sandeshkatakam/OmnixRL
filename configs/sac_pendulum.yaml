@@ -1,0 +1,41 @@
+# Environment
+env:
+  env_id: "Pendulum-v1"
+  max_episode_steps: 200
+  action_space_type: "continuous"
+  state_space_type: "continuous"
+  reward_scale: 0.1
+
+# Network Architecture
+network:
+  actor_hidden_sizes: [256, 256]
+  critic_hidden_sizes: [256, 256]
+  activation: "relu"
+  output_activation: "tanh"
+
+# Training Process
+training:
+  total_timesteps: 500000
+  batch_size: 256
+  learning_rate: 0.0003
+  device: "cuda"
+  seed: 42
+  num_envs: 1
+  eval_freq: 10000
+
+# SAC Specific
+algorithm:
+  buffer_size: 1000000
+  learning_starts: 10000
+  tau: 0.005
+  gamma: 0.99
+  train_freq: 1
+  gradient_steps: 1
+  ent_coef: "auto"
+
+# Logging
+logging:
+  log_dir: "logs/sac_pendulum"
+  wandb_project: "sac_training"
+  tensorboard: true
+  verbose: 1
