@@ -58,12 +58,12 @@ A comprehensive reinforcement learning library implemented in JAX, inspired by O
 - Built-in hyperparameter tuning
 
 ## Performance Benchmarks
-
+<!-- 
 ### Training Speed (Steps/Second)
 
 | Algorithm | CPU (AMD 5900X) | GPU (RTX 3080) | TPU v3-8 | Notes |
-|-----------|----------------|----------------|-----------|--------|
-| VPG | 12,450 ± 320 | 45,800 ± 520 | 124,500 ± 1,200 | Single environment |
+|-----------|----------------|----------------|-----------|--------| -->
+<!-- | VPG | 12,450 ± 320 | 45,800 ± 520 | 124,500 ± 1,200 | Single environment |
 | PPO | 8,900 ± 250 | 38,600 ± 480 | 98,400 ± 950 | 8 parallel environments |
 | SAC | 6,800 ± 180 | 32,400 ± 420 | 84,600 ± 880 | With replay buffer |
 | DQN | 9,200 ± 220 | 41,200 ± 460 | 102,800 ± 1,100 | Priority replay enabled |
@@ -100,9 +100,9 @@ A comprehensive reinforcement learning library implemented in JAX, inspired by O
 | SAC | 486 | 824 | 886 |
 | DQN | 524 | 886 | 945 |
 | DDPG | 386 | 724 | 768 |
-| TD3 | 412 | 768 | 812 |
+| TD3 | 412 | 768 | 812 | -->
 
-### Training Time to Performance Threshold³
+<!-- ### Training Time to Performance Threshold³
 
 | Environment | Algorithm | Steps to Threshold | Wall Time (GPU) | Wall Time (TPU) |
 |-------------|-----------|-------------------|-----------------|-----------------|
@@ -114,9 +114,9 @@ A comprehensive reinforcement learning library implemented in JAX, inspired by O
 ### Notes:
 ¹ Baselines from "Soft Actor-Critic Algorithms and Applications" (Haarnoja et al., 2019)  
 ² Baselines from "Rainbow: Combining Improvements in Deep Reinforcement Learning" (Hessel et al., 2018)  
-³ Performance threshold: 90% of published baseline performance  
+³ Performance threshold: 90% of published baseline performance   -->
 
-### Hardware Specifications:
+<!-- ### Hardware Specifications:
 
 - **CPU**: AMD Ryzen 9 5900X (12 cores, 24 threads)
 - **GPU**: NVIDIA RTX 3080 (10GB VRAM)
@@ -137,7 +137,7 @@ A comprehensive reinforcement learning library implemented in JAX, inspired by O
 - 95% confidence intervals reported
 - Training performed with default hyperparameters
 - GPU results using mixed precision (float16/float32)
-- TPU results using bfloat16/float32
+- TPU results using bfloat16/float32 -->
 
 ## Installation
 
@@ -172,7 +172,7 @@ batch_size=64
 ppo.train(total_timesteps=1_000_000)
 ```
 
-## Advanced Features
+<!-- ## Advanced Features
 
 ### Hyperparameter Tuning
 
@@ -205,8 +205,8 @@ study = AblationStudy(config, env, PPO, base_config)
 study.add_component_ablation("value_function", variants)
 study.add_parameter_ablation("clip_range", values=[0.1, 0.2, 0.3])
 study.run()
-```
-
+``` -->
+<!-- 
 ## Documentation
 
 Detailed documentation is available at [readthedocs link]. This includes:
@@ -215,7 +215,7 @@ Detailed documentation is available at [readthedocs link]. This includes:
 - API reference
 - Tutorials and examples
 - Experiment reproduction guides
-- Contributing guidelines
+- Contributing guidelines -->
 
 ## Citing
 
