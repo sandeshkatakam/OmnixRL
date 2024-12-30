@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 import jax.numpy as jnp
 from jax.random import PRNGKey
 
-class BaseNN(ABC):
+class BaseModel(ABC): # Question: Should this be BasePolicy/BaseNN/BaseModel??
     """
     Abstract base class for user-defined models in the RL library.
     """
@@ -32,7 +32,7 @@ class BaseNN(ABC):
             input_shape: Tuple. Shape of the input data.
 
         Returns:
-            params: PyTree. Initialized model parameters.
+            params: PyTree. Initialized model parameters. # Q: Should this be PyTree Data type or something else?
         """
         pass
 
@@ -61,8 +61,8 @@ class BaseAlgorithm(ABC):
         self.opt_state = optimizer.init(self.params)
 
     @abstractmethod
-    def select_action(self, state):
-        """
+    def sample_action(self, state): # Note: here we might need distrax to specify distributions and how to sample actions
+        """# Question: For State here should I use a data class EnvState or just a numpy array? 
         Select an action given the current state.
 
         Parameters:
@@ -83,7 +83,7 @@ class BaseAlgorithm(ABC):
         pass
 
     @abstractmethod
-    def update(self, *args, **kwargs):
+    def update_params(self, *args, **kwargs):
         """
         Update the algorithm's parameters.
 
@@ -91,52 +91,14 @@ class BaseAlgorithm(ABC):
         """
         pass
 
-# ... existing model examples ...
-
-# Update PolicyGradient to inherit from BaseAlgorithm
-class PolicyGradient(BaseAlgorithm):
-    def __init__(self, model: BaseModel, input_shape, optimizer, rng):
-        super().__init__(model, input_shape, optimizer, rng)
-
-    def select_action(self, state):
-        logits, self.rng = self.model.forward(self.params, state, self.rng)
-        action = jax.random.categorical(self.rng, logits)
-        return action
-
-    def train_step(self, states, actions, rewards, loss_fn):
-        loss_grad_fn = jax.value_and_grad(loss_fn)
-        loss, grads = loss_grad_fn(self.params, states, actions, rewards)
-        updates, self.opt_state = self.optimizer.update(grads, self.opt_state)
-        self.params = optax.apply_updates(self.params, updates)
-        return loss
-        
-    def update(self, states, actions, rewards):
-        """
-        Update policy parameters using the collected experience.
-        
-        Parameters:
-            states: Array of states from collected experience
-            actions: Array of actions taken
-            rewards: Array of rewards received
-            
-        Returns:
-            loss: The training loss for this update
-        """
-        def loss_fn(params, states, actions, rewards):
-            logits, _ = self.model.forward(params, states, self.rng)
-            # Example loss computation - should be implemented based on specific algorithm
-            return -jnp.mean(rewards)  # Placeholder loss
-            
-        return self.train_step(states, actions, rewards, loss_fn)
-    
-
+# ###########################
 
 ############################# User Defined Models Examples in Different neural network libraries ##########################
 # In FLAX:
 from flax import linen as nn
 
 class FlaxModel(BaseModel):
-    def __init__(self):
+    def __init__(self, model: nn.Module):
         self.model = nn.Dense(10)
 
     def forward(self, params, inputs, rng):
@@ -152,7 +114,7 @@ class FlaxModel(BaseModel):
 import equinox as eqx
 
 class EquinoxModel(BaseModel):
-    def __init__(self):
+    def __init__(self, model: eqx.nn.Module):
         self.model = eqx.nn.Linear(4, 10)
 
     def forward(self, params, inputs, rng):
