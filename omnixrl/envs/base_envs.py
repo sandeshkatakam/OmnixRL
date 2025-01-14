@@ -132,7 +132,6 @@ class EnvLoader(BaseEnvLoader):
                 self._env, 
                 max_episode_steps=self.config.max_episode_steps
             )
-        
         # Add any additional wrappers based on config
         self._env = self.add_wrappers(self._env)
     
